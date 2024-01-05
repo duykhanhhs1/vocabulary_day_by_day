@@ -1,0 +1,4 @@
+class HomeRoutes {
+  HomeRoutes._();
+
+}

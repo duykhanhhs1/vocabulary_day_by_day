@@ -1,0 +1,4 @@
+class ProfileRoutes {
+  ProfileRoutes._();
+
+}
