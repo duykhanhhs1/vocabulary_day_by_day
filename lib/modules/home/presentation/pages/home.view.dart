@@ -5,13 +5,22 @@ import 'package:vocabulary_day_by_day/common/theme/app_colors.dart';
 import 'package:vocabulary_day_by_day/common/theme/app_texts.dart';
 import 'package:vocabulary_day_by_day/common/theme/constants.dart';
 import 'package:vocabulary_day_by_day/common/widgets/app_date_picker.widget.dart';
+import 'package:vocabulary_day_by_day/common/widgets/app_loading_indicator.widget.dart';
 import 'package:vocabulary_day_by_day/common/widgets/rounded_container.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:vocabulary_day_by_day/common/widgets/spacer.dart';
 import 'package:vocabulary_day_by_day/modules/home/presentation/blocs/home/home_bloc.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   const HomeView({super.key});
+
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  var pageController = PageController();
 
   @override
   Widget build(BuildContext context) {
@@ -19,9 +28,13 @@ class HomeView extends StatelessWidget {
       create: (context) => HomeBloc(),
       child: BlocListener<HomeBloc, HomeState>(
         listener: (context, state) {
-          // if (!state.isLoggedIn) {
-          //   context.push(AuthRoutes.login);
-          // }
+          if (state.loadStatus.isSuccess) {
+            pageController = PageController(
+              initialPage: _getWeekDays(state.currentDate).indexOf(
+                state.currentDate,
+              ),
+            );
+          }
         },
         child: Scaffold(
           backgroundColor: Colors.transparent,
@@ -29,15 +42,97 @@ class HomeView extends StatelessWidget {
             backgroundColor: Colors.transparent,
             toolbarHeight: 35,
           ),
-          body: const Padding(
-            padding:
-                EdgeInsets.symmetric(horizontal: kHorizontalContentPadding),
+          body: Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: kHorizontalContentPadding),
             child: Column(
-              children: [_HorizontalDatePicker()],
+              children: [
+                const _HorizontalDatePicker(),
+                const VSpacer(16),
+                Expanded(
+                  child: RoundedContainer(
+                    width: context.width,
+                    child: _HomeBody(
+                      pageController: pageController,
+                    ),
+                  ),
+                ),
+                const VSpacer(40),
+              ],
             ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class _HomeBody extends StatelessWidget {
+  const _HomeBody({
+    required this.pageController,
+  });
+
+  final PageController pageController;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<HomeBloc, HomeState>(
+      // buildWhen: (previous, current) {
+      //   return !previous.currentDate.isSameDate(current.currentDate);
+      // },
+      builder: (context, state) {
+        switch (state.loadStatus) {
+          case LoadStatus.loading:
+            return const AppLoadingIndicator();
+          case LoadStatus.error:
+            return const SizedBox();
+          case LoadStatus.success:
+            return PageView.builder(
+              controller: pageController,
+              itemCount: state.vocabularies.length,
+              scrollDirection: Axis.vertical,
+              itemBuilder: (context, index) {
+                final vocab = state.vocabularies[index];
+                final pronoun = vocab.pronoun;
+                final explain = vocab.explain;
+                final example = vocab.example;
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      vocab.word,
+                      style: TextStyles.largeHeading4.copyWith(
+                        color: Colors.white,
+                      ),
+                    ),
+                    if (pronoun != null)
+                      Text(
+                        pronoun,
+                        style: TextStyles.mobileXSMedium.copyWith(
+                          color: Colors.white,
+                        ),
+                      ),
+                    Text(
+                      "${vocab.type.getName} ${explain ?? ""}",
+                      style: TextStyles.largeSubtitle1.copyWith(
+                        color: Colors.white,
+                      ),
+                    ),
+                    const VSpacer(20),
+                    if (example != null)
+                      Text(
+                        "($example)",
+                        style: TextStyles.mobileSMedium.copyWith(
+                          color: Colors.white,
+                          inherit: true,
+                        ),
+                      ),
+                  ],
+                );
+              },
+            );
+        }
+      },
     );
   }
 }
@@ -48,6 +143,9 @@ class _HorizontalDatePicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
+      buildWhen: (previous, current) {
+        return !previous.currentDate.isSameDate(current.currentDate);
+      },
       builder: (context, state) {
         final currentDate = context.read<HomeBloc>().state.currentDate;
         final dates = _getWeekDays(currentDate);
@@ -157,20 +255,20 @@ class _HorizontalDatePicker extends StatelessWidget {
           HomeDatePicked(date: date),
         );
   }
+}
 
-  List<DateTime> _getWeekDays(DateTime date) {
-    // Calculate the start and end of the current week
-    DateTime startOfWeek = date.subtract(Duration(days: date.weekday - 1));
+List<DateTime> _getWeekDays(DateTime date) {
+  // Calculate the start and end of the current week
+  DateTime startOfWeek = date.subtract(Duration(days: date.weekday - 1));
 
-    // Create a list to store the days of the week
-    List<DateTime> weekDays = [];
+  // Create a list to store the days of the week
+  List<DateTime> weekDays = [];
 
-    // Loop through the days of the week and add them to the list
-    for (int i = 0; i < DateTime.daysPerWeek; i++) {
-      DateTime currentDate = startOfWeek.add(Duration(days: i));
-      weekDays.add(currentDate);
-    }
-
-    return weekDays;
+  // Loop through the days of the week and add them to the list
+  for (int i = 0; i < DateTime.daysPerWeek; i++) {
+    DateTime currentDate = startOfWeek.add(Duration(days: i));
+    weekDays.add(currentDate);
   }
+
+  return weekDays;
 }

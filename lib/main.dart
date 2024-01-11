@@ -1,5 +1,6 @@
 import 'package:vocabulary_day_by_day/common/configs/configuration.dart';
 import 'package:vocabulary_day_by_day/common/configs/router.dart';
+import 'package:vocabulary_day_by_day/common/theme/theme.dart';
 import 'package:vocabulary_day_by_day/modules/auth/presentation/blocs/auth/auth_bloc.dart';
 import 'package:vocabulary_day_by_day/modules/auth/routes.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +41,8 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       routerConfig: router,
+      themeMode: ThemeMode.dark,
+      darkTheme: lightThemeData(context),
       builder: (context, child) {
         return BlocProvider(
           create: (context) => AuthBloc(),

@@ -17,7 +17,15 @@ import 'package:vocabulary_day_by_day/modules/auth/data/repositories/auth.reposi
 import 'package:vocabulary_day_by_day/modules/auth/domain/repositories/auth.repository.dart'
     as _i4;
 import 'package:vocabulary_day_by_day/modules/auth/domain/use_cases/auth.use_case.dart'
+    as _i9;
+import 'package:vocabulary_day_by_day/modules/home/data/data_sources/home.datasource.dart'
     as _i6;
+import 'package:vocabulary_day_by_day/modules/home/data/repositories/home.repository.dart'
+    as _i8;
+import 'package:vocabulary_day_by_day/modules/home/domain/repositories/home.repository.dart'
+    as _i7;
+import 'package:vocabulary_day_by_day/modules/home/domain/use_cases/home.use_case.dart'
+    as _i10;
 
 extension GetItInjectableX on _i1.GetIt {
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -33,10 +41,15 @@ extension GetItInjectableX on _i1.GetIt {
     gh.factory<_i3.IAuthDataSource>(() => _i3.UserDataSource());
     gh.factory<_i4.IAuthRepository>(
         () => _i5.AuthRepository(authDataSource: gh<_i3.IAuthDataSource>()));
-    gh.factory<_i6.UserLoginUseCase>(
-        () => _i6.UserLoginUseCase(repository: gh<_i4.IAuthRepository>()));
-    gh.factory<_i6.GetProfileUseCase>(
-        () => _i6.GetProfileUseCase(repository: gh<_i4.IAuthRepository>()));
+    gh.factory<_i6.IHomeDataSource>(() => _i6.UserDataSource());
+    gh.factory<_i7.IHomeRepository>(
+        () => _i8.HomeRepository(authDataSource: gh<_i6.IHomeDataSource>()));
+    gh.factory<_i9.UserLoginUseCase>(
+        () => _i9.UserLoginUseCase(repository: gh<_i4.IAuthRepository>()));
+    gh.factory<_i9.GetProfileUseCase>(
+        () => _i9.GetProfileUseCase(repository: gh<_i4.IAuthRepository>()));
+    gh.factory<_i10.GetVocabulariesUseCase>(() =>
+        _i10.GetVocabulariesUseCase(repository: gh<_i7.IHomeRepository>()));
     return this;
   }
 }

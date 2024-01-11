@@ -46,7 +46,10 @@ class _RootViewState extends State<RootView> {
           onPressed: () {},
           shape: const CircleBorder(),
           backgroundColor: ColorStyles.blue2,
-          child: const Icon(CupertinoIcons.add),
+          child: const Icon(
+            CupertinoIcons.add,
+            color: ColorStyles.black7,
+          ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),

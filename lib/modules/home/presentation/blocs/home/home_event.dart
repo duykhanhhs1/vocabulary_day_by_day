@@ -17,3 +17,10 @@ final class HomeDatePicked extends HomeEvent {
   @override
   List<Object> get props => [date];
 }
+
+final class HomeInitialized extends HomeEvent {
+  const HomeInitialized();
+
+  @override
+  List<Object> get props => [];
+}
