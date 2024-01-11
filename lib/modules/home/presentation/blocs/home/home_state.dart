@@ -2,26 +2,22 @@ part of 'home_bloc.dart';
 
 final class HomeState extends Equatable {
   HomeState({
-    this.getUserDataStatus = ResponseStatus.initial,
     this.loadStatus = LoadStatus.loading,
     List<VocabularyEntity>? vocabularies,
     DateTime? currentDate,
   })  : currentDate = currentDate ?? DateTime.now(),
         vocabularies = vocabularies ?? [];
 
-  final ResponseStatus getUserDataStatus;
   final DateTime currentDate;
   final List<VocabularyEntity> vocabularies;
   final LoadStatus loadStatus;
 
   HomeState copyWith({
-    ResponseStatus? getUserDataStatus,
     DateTime? currentDate,
     List<VocabularyEntity>? vocabularies,
     LoadStatus? loadStatus,
   }) {
     return HomeState(
-      getUserDataStatus: getUserDataStatus ?? this.getUserDataStatus,
       currentDate: currentDate ?? this.currentDate,
       vocabularies: vocabularies ?? this.vocabularies,
       loadStatus: loadStatus ?? this.loadStatus,
@@ -29,7 +25,7 @@ final class HomeState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [getUserDataStatus, currentDate, vocabularies];
+  List<Object?> get props =>[currentDate, vocabularies, loadStatus];
 }
 
 class ResponseStatus extends Equatable {

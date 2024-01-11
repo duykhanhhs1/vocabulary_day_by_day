@@ -26,40 +26,29 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => HomeBloc(),
-      child: BlocListener<HomeBloc, HomeState>(
-        listener: (context, state) {
-          if (state.loadStatus.isSuccess) {
-            pageController = PageController(
-              initialPage: _getWeekDays(state.currentDate).indexOf(
-                state.currentDate,
-              ),
-            );
-          }
-        },
-        child: Scaffold(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
           backgroundColor: Colors.transparent,
-          appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            toolbarHeight: 35,
-          ),
-          body: Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: kHorizontalContentPadding),
-            child: Column(
-              children: [
-                const _HorizontalDatePicker(),
-                const VSpacer(16),
-                Expanded(
-                  child: RoundedContainer(
-                    width: context.width,
-                    child: _HomeBody(
-                      pageController: pageController,
-                    ),
+          toolbarHeight: 35,
+        ),
+        body: Padding(
+          padding:
+              const EdgeInsets.symmetric(horizontal: kHorizontalContentPadding),
+          child: Column(
+            children: [
+              const _HorizontalDatePicker(),
+              const VSpacer(16),
+              Expanded(
+                child: RoundedContainer(
+                  width: context.width,
+                  child: _HomeBody(
+                    pageController: pageController,
                   ),
                 ),
-                const VSpacer(40),
-              ],
-            ),
+              ),
+              const VSpacer(40),
+            ],
           ),
         ),
       ),
@@ -77,9 +66,9 @@ class _HomeBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(
-      // buildWhen: (previous, current) {
-      //   return !previous.currentDate.isSameDate(current.currentDate);
-      // },
+      buildWhen: (previous, current) {
+        return previous.loadStatus != current.loadStatus;
+      },
       builder: (context, state) {
         switch (state.loadStatus) {
           case LoadStatus.loading:

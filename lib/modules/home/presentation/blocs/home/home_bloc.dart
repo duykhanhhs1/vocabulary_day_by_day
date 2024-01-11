@@ -20,22 +20,27 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   final GetVocabulariesUseCase _getVocabulariesUseCase = getIt.get();
 
-  void _onHomeDatePicked(
+  FutureOr<void> _onHomeDatePicked(
     HomeDatePicked event,
     Emitter<HomeState> emit,
-  ) {
+  ) async {
     if (event.date.day == state.currentDate.day) {
       return;
     }
     emit(
       state.copyWith(currentDate: event.date),
     );
+    await _getVocabularies(emit);
   }
 
   FutureOr<void> _onHomeInitialized(
     HomeInitialized event,
     Emitter<HomeState> emit,
   ) async {
+    await _getVocabularies(emit);
+  }
+
+  Future<void> _getVocabularies(Emitter<HomeState> emit) async {
     emit(
       state.copyWith(loadStatus: LoadStatus.loading),
     );
