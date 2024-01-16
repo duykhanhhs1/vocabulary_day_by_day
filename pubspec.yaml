@@ -54,6 +54,7 @@ dependencies:
   intl: 0.18.1
   syncfusion_flutter_datepicker: 22.2.12
   flutter_svg: 2.0.9
+  freezed_annotation: 2.4.1
 
 dev_dependencies:
   flutter_test:
@@ -71,6 +72,7 @@ dev_dependencies:
   analyzer: 5.13.0
   injectable_generator: 2.4.1
   flutter_gen_runner:
+  freezed: 2.4.6
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -1,56 +1,32 @@
 part of 'home_bloc.dart';
 
-final class HomeState extends Equatable {
-  HomeState({
-    this.loadStatus = LoadStatus.loading,
-    List<VocabularyEntity>? vocabularies,
-    DateTime? currentDate,
-  })  : currentDate = currentDate ?? DateTime.now(),
-        vocabularies = vocabularies ?? [];
+@freezed
+abstract class HomeState with _$HomeState {
+  const factory HomeState({
+    required LoadStatus loadStatus,
+    required List<VocabularyEntity> vocabularies,
+    required DateTime currentDate,
+  }) = _HomeState;
 
-  final DateTime currentDate;
-  final List<VocabularyEntity> vocabularies;
-  final LoadStatus loadStatus;
-
-  HomeState copyWith({
-    DateTime? currentDate,
-    List<VocabularyEntity>? vocabularies,
-    LoadStatus? loadStatus,
-  }) {
-    return HomeState(
-      currentDate: currentDate ?? this.currentDate,
-      vocabularies: vocabularies ?? this.vocabularies,
-      loadStatus: loadStatus ?? this.loadStatus,
-    );
-  }
-
-  @override
-  List<Object?> get props =>[currentDate, vocabularies, loadStatus];
+  factory HomeState.initData() => HomeState(
+        loadStatus: LoadStatus.loading,
+        vocabularies: [],
+        currentDate: DateTime.now(),
+      );
 }
 
-class ResponseStatus extends Equatable {
-  final FormzSubmissionStatus status;
-  final String? message;
-
-  const ResponseStatus({required this.status, this.message});
+@freezed
+abstract class ResponseStatus with _$ResponseStatus {
+  const factory ResponseStatus({
+    required FormzSubmissionStatus status,
+    String? message,
+  }) = _ResponseStatus;
 
   static const initial = ResponseStatus(
     status: FormzSubmissionStatus.initial,
   );
-
-  ResponseStatus copyWith({
-    FormzSubmissionStatus? status,
-    String? message,
-  }) {
-    return ResponseStatus(
-      status: status ?? this.status,
-      message: message ?? this.message,
-    );
-  }
-
-  @override
-  List<Object?> get props => [status, message];
 }
+
 enum LoadStatus {
   loading,
   error,
