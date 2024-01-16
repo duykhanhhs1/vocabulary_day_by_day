@@ -110,10 +110,10 @@ class _HomeBody extends StatelessWidget {
                     const VSpacer(20),
                     if (example != null)
                       Text(
-                        "($example)",
+                        "(Ex: $example)",
                         style: TextStyles.mobileSMedium.copyWith(
                           color: Colors.white,
-                          inherit: true,
+                          fontStyle: FontStyle.italic,
                         ),
                       ),
                   ],
